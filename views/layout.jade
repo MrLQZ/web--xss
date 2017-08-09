@@ -1,0 +1,41 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    script(src='/javascripts/encode.js')
+    script(src='/javascripts/domParse.js')
+    script.
+     var parse=function(str){
+      var results='';
+      try{
+       HTMLParser(he.unescape(str,{strict:true}),{
+        start:function(tag,attrs,unary){
+        	//- 过滤这些标签
+        	if(tag=='script'||tag=='style'||tag=='link'||tag=='iframe'||tag=='frame') return;
+          results += '<'+tag;
+          //- 注释了就过滤掉了所有了属性和事件
+          //for(var i=0,len=attrs.length;i<len;i++){
+          	//results += " "+attrs[i].name+'="'+attrs[i].escaped+'"';
+          //}
+          results += (unary?"/":"")+">";
+        },
+        end:function(tag){
+         results+="</"+tag+">";
+        },
+        chars:function(text){
+         results+=text;
+        },
+        comment:function(text){
+         results+="<!--"+text+"-->";
+        }
+       });
+       return results
+      }catch(e){
+       console.log(e);
+      }finally{
+
+      }
+     };
+  body
+    block content

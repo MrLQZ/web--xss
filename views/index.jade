@@ -1,0 +1,48 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  textarea#txt(name='name',rows='8',cols='80')
+   p skl
+    img(src='/images/das.png',alt='',onerror='alert(1)')
+  button#btn(name='button',type='button') 评论 
+  button#get(name='button',type='button') 获取评论
+
+  script.
+   var btn=document.getElementById('btn');
+   var get=document.getElementById('get');
+   var txt=document.getElementById('txt');
+   btn.addEventListener('click',function(){
+   	var xhr=new XMLHttpRequest();
+   	var url='/comment?comment='+txt.value;
+   	xhr.open('GET',url,true);
+   	xhr.onreadystatechange=function(){
+   		if(xhr.readyState==4){
+   			if(xhr.status==200){
+   				console.log(xhr);
+   			}else{
+   				console.log('error');
+   			}
+   		}
+   	}
+   	xhr.send();
+   });
+   get.addEventListener('click',function(){
+   	var xhr=new XMLHttpRequest();
+   	var url='/getComment';
+   	xhr.open('GET',url,true);
+   	xhr.onreadystatechange=function(){
+   		if(xhr.readyState==4){
+   			if(xhr.status==200){
+   				var com = parse(JSON.parse(xhr.response).comment);
+   				var txt=document.createElement('span');
+   				txt.innerHTML=com;
+   				document.body.appendChild(txt);
+   			}else{
+   				console.log('error');
+   			}
+   		}
+   	}
+   	xhr.send();
+   });
